@@ -10,6 +10,7 @@ Requirements:
 	- Use classes!
 """
 from random import randint
+from time import sleep
 
 class Player(object):
 	
@@ -19,16 +20,15 @@ class Player(object):
 				'ten':10, 'jack':10, 'queen':10,
 				'king':10, 'ace':11}
 
-	def __init__(self,bankroll=100):
+	def __init__(self,bankroll=100,name="Dealer"):
 		self.bankroll = bankroll
+		self.name = name
 		self.wins = 0
 		self.losses =0
 		self.hand = []
 		self.handvalue = 0
 		self.ace_count = 0
-
-	def adjust_bankroll(self,amount):
-		self.bankroll += amount
+		self.bet = 0
 
 	def add_card(self,card):
 		self.hand.append(card)
@@ -41,12 +41,17 @@ class Player(object):
 		self.hand = []
 		self.handvalue = 0
 		self.ace_count = 0
+		self.bet = 0
 		
 	def print_hand(self):
-		print "You have the following cards: "
+		string = "You have the following cards: "
 		for card in self.hand:
-			print card
+			string += card + ", "
+		print string[0:len(string)-2]
 		print "For a total of: {}".format(self.handvalue)
+
+	def __str__(self):
+		return str(self.name)
 
 
 class Deck(object):
@@ -87,17 +92,49 @@ class Deck(object):
 	def __len__(self):
 		return len(self.cards)
 
-brad = Player(10)
-#print brad.wins
-#print brad.losses
-#print brad.bankroll
+def game_setup(user,dealer,deck):
+	"""
+	Clears the players hands and shuffles the deck
+	"""
+	user.clear_hand()
+	dealer.clear_hand()
+	deck.shuffle_deck()
+	print "Cards have been collected and the deck has been shuffled!"
+	user.bet = int(raw_input("Enter the amount you wish to bet: "))
+	user.bankroll -= user.bet
+	inital_deal(user,dealer,deck)
 
+
+def inital_deal(user,dealer,deck):
+	sleep(1.5)
+	card = deck.draw_card()
+	print user, "has drawn a {}".format(card)
+	user.add_card(card)
+	sleep(1.5)
+	card = deck.draw_card()
+	print dealer, "has drawn a card"
+	dealer.add_card(card)
+	sleep(1.5)
+	card = deck.draw_card()
+	print user, "has drawn a {}".format(card)
+	user.add_card(card)
+	sleep(1.5)	
+	card = deck.draw_card()
+	print dealer, "has drawn a {}".format(card)
+	dealer.add_card(card)
+	sleep(1.5)
+	user.print_hand()
+
+
+def deal_card(user,deck):
+	card = deck.draw_card
+	user.add_card(card)
+	print user, "has drawn a {}".format(card) 
+
+
+player1 = Player(10,'Brad')
+dealer = Player(1000000) #Even casinos have a limit!
 deck_0 = Deck()
-print len(deck_0)
-#print deck_0
-#print deck_0.cards
-brad.add_card(deck_0.draw_card())
-brad.add_card(deck_0.draw_card())
-brad.add_card(deck_0.draw_card())
-brad.print_hand()
+
+game_setup(player1,dealer,deck_0)
 
