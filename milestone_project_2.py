@@ -44,7 +44,7 @@ class Player(object):
 		self.bet = 0
 		
 	def print_hand(self):
-		string = "You have the following cards: "
+		string = self.name + " have the following cards: "
 		for card in self.hand:
 			string += card + ", "
 		print string[0:len(string)-2]
@@ -108,7 +108,7 @@ def game_setup(user,dealer,deck):
 def inital_deal(user,dealer,deck):
 	sleep(1.5)
 	card = deck.draw_card()
-	print user, "has drawn a {}".format(card)
+	print user, "have drawn a {}".format(card)
 	user.add_card(card)
 	sleep(1.5)
 	card = deck.draw_card()
@@ -116,7 +116,7 @@ def inital_deal(user,dealer,deck):
 	dealer.add_card(card)
 	sleep(1.5)
 	card = deck.draw_card()
-	print user, "has drawn a {}".format(card)
+	print user, "have drawn a {}".format(card)
 	user.add_card(card)
 	sleep(1.5)	
 	card = deck.draw_card()
@@ -127,7 +127,7 @@ def inital_deal(user,dealer,deck):
 
 def user_hit(user,deck):
 	cont = True
-	while cont:
+	while cont and user.handvalue < 21:
 		selection = str(raw_input("Enter if you would like to 'hit' or 'stay': "))
 		sleep(1.5)		
 		if selection == 'hit':
@@ -150,11 +150,17 @@ def dealer_hit(dealer,deck):
 		dealer.add_card(card)
 		print dealer, "has drawn a {}".format(card)
 		sleep(1.5)
-		dealer.print_hand()
+	dealer.print_hand()
 
 def win_check(user,dealer):
+	print user, "have {}".format(user.handvalue),dealer,"has {}".format(dealer.handvalue)
 	if user.handvalue > dealer.handvalue:
-		
+		print user, "have won the game!"
+		user.wins += 1		
+	elif user.handvalue == dealer.handvalue:
+		print user,"have pushed with the dealer."
+	else:
+		print dealer,"has won the game."
 
 #def deal_card(user,deck):
 #	card = deck.draw_card
@@ -163,9 +169,10 @@ def win_check(user,dealer):
 
 
 player1 = Player(10,'You')
-dealer = Player(1000000) #Even casinos have a limit!
+dealer = Player(1000000,'Dealer') #Even casinos have a limit!
 deck = Deck()
 
 game_setup(player1,dealer,deck)
 user_hit(player1,deck)
 dealer_hit(dealer,deck)
+win_check(player1,dealer)
