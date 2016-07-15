@@ -100,10 +100,10 @@ def game_setup(user,dealer,deck):
 	dealer.clear_hand()
 	deck.shuffle_deck()
 	print "Cards have been collected and the deck has been shuffled!"
+	print "You have {} dollars in chips.".format(user.bankroll)
 	user.bet = int(raw_input("Enter the amount you wish to bet: "))
 	user.bankroll -= user.bet
 	inital_deal(user,dealer,deck)
-
 
 def inital_deal(user,dealer,deck):
 	sleep(1.5)
@@ -125,16 +125,47 @@ def inital_deal(user,dealer,deck):
 	sleep(1.5)
 	user.print_hand()
 
+def user_hit(user,deck):
+	cont = True
+	while cont:
+		selection = str(raw_input("Enter if you would like to 'hit' or 'stay': "))
+		sleep(1.5)		
+		if selection == 'hit':
+			card = deck.draw_card()
+			user.add_card(card)
+			print user, "has drawn a {}".format(card)
+			sleep(1.5)
+			user.print_hand()
+		else:
+			print "You have choosen to stay."
+			cont = False 
 
-def deal_card(user,deck):
-	card = deck.draw_card
-	user.add_card(card)
-	print user, "has drawn a {}".format(card) 
+def dealer_hit(dealer,deck):
+	"""
+	Dealer must play by the rules...
+	Hit up to 17
+	"""
+	while dealer.handvalue < 17:
+		card = deck.draw_card()
+		dealer.add_card(card)
+		print dealer, "has drawn a {}".format(card)
+		sleep(1.5)
+		dealer.print_hand()
+
+def win_check(user,dealer):
+	if user.handvalue > dealer.handvalue:
+		
+
+#def deal_card(user,deck):
+#	card = deck.draw_card
+#	user.add_card(card)
+#	print user, "has drawn a {}".format(card) 
 
 
-player1 = Player(10,'Brad')
+player1 = Player(10,'You')
 dealer = Player(1000000) #Even casinos have a limit!
-deck_0 = Deck()
+deck = Deck()
 
-game_setup(player1,dealer,deck_0)
-
+game_setup(player1,dealer,deck)
+user_hit(player1,deck)
+dealer_hit(dealer,deck)
