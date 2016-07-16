@@ -14,7 +14,7 @@ from time import sleep
 
 class Player(object):
 	
-	card_map = {'one':1, 'two':2, 'three':3, 
+	card_map = {'two':2, 'three':3, 
 				'four':4, 'five':5, 'six':6,
 				'seven':7, 'eight':8, 'nine':9,
 				'ten':10, 'jack':10, 'queen':10,
@@ -139,6 +139,11 @@ def user_hit(user,deck):
 		else:
 			print "You have choosen to stay."
 			cont = False 
+	if user.handvalue > 21:
+		print 'You have busted with a total of {}'.format(user.handvalue)
+		return False
+	else:
+		return True
 
 def dealer_hit(dealer,deck):
 	"""
@@ -151,6 +156,11 @@ def dealer_hit(dealer,deck):
 		print dealer, "has drawn a {}".format(card)
 		sleep(1.5)
 	dealer.print_hand()
+	if dealer.handvalue > 21:
+		print 'The dealer busts, you have won.'
+		return False
+	else:
+		return True
 
 def win_check(user,dealer):
 	print user, "have {}".format(user.handvalue),dealer,"has {}".format(dealer.handvalue)
@@ -162,6 +172,17 @@ def win_check(user,dealer):
 	else:
 		print dealer,"has won the game."
 
+def game(user,dealer,deck):
+	game_setup(user,dealer,deck)
+	user_bool = user_hit(user,deck)
+	if user_bool == False:
+		return
+	dealer_bool = dealer_hit(dealer,deck)
+	if dealer_bool == False:
+		return
+	if user_bool == True and dealer_bool == True:
+		win_check(player1,dealer)
+
 #def deal_card(user,deck):
 #	card = deck.draw_card
 #	user.add_card(card)
@@ -171,8 +192,10 @@ def win_check(user,dealer):
 player1 = Player(10,'You')
 dealer = Player(1000000,'Dealer') #Even casinos have a limit!
 deck = Deck()
-
+"""
 game_setup(player1,dealer,deck)
 user_hit(player1,deck)
 dealer_hit(dealer,deck)
 win_check(player1,dealer)
+"""
+game(player1,dealer,deck)
